@@ -1,18 +1,83 @@
+
 #include "ModelCreate.h"
 #include "ModelTextGenerator.h"
 
 int main(int argc, char* argv[]) {
 
     try {
-        if (argc != 4) and (argc != 6) {
-            throw std::invalid_argument("Incorrect number of arguments.");
-            std::cerr << "Usage: " << argv[0] << " -a p k textfile o\n" << 
-            "p a real number greater than 0, k a positive integer, o >= k a positive integer." << std::endl;
-        }
-    }
+        // I think this is very useful! args 
+        std::vector<std::string> args(argv, argv + argc);
 
-    catch (const std::exception& e) {
+        // part of most error messages : instructions on desired input. - specific error found added in boolean checks.
+        std::string errorMsg = std::string("Usage: ") + args[0] + " -a p k textfile o\n" +
+                               "p a real non-negative number, k a positive integer, o >= k a positive integer.\n" +
+                               "-a and p come as an optional pair of input parameters.\n";
+        
+        // check : four or more input parameters.
+        if (args.size() < 4) {
+            std::string errorMsg1 = errorMsg + " - specifically : there were to few input parameters.";
+            throw std::invalid_argument(errorMsg1);
+        }
+
+        // check : input should be 'args[0] k textfile o' or 'args[0] -a p k textfile o', (4 or 6 input parameters).
+        if (args.size() != 4 && args.size() != 6) {
+            std::string errorMsg2 = errorMsg + " - specifically : there was " + std::to_string(args.size()) + " input parameters.";
+            throw std::invalid_argument(errorMsg2);
+        }
+
+        // check : inputs 'k' and 'o' should be positive integers and o should be greater or equal to k.
+        size_t k_idx = 0;
+        size_t o_idx = 0;
+        int k = std::stoi(args[args.size() - 3], &k_idx);
+        int o = std::stoi(args[args.size() - 1], &o_idx);
+        if (k_idx < std::string(args[args.size() - 3]).length() || k <= 0) {
+            std::string errorMsg3 = errorMsg + " - specifically : input k " + args[args.size() - 3] + " is not a valid positive integer.";
+            throw std::invalid_argument(errorMsg3);
+        } 
+        if (o_idx < std::string(args[args.size() - 1]).length() || o <= 0) {
+            std::string errorMsg4 = errorMsg + " - specifically : input o " + args[args.size() - 1] + " is not a valid positive integer.";
+            throw std::invalid_argument(errorMsg4);
+        }
+        if (o < k) {
+            std::string errorMsg5 = errorMsg + " - specifically : input o " + args[args.size() - 1] + " was smaller than input k " + args[args.size() - 3] + ".";
+            throw std::invalid_argument(errorMsg5);
+        }
+
+        // check, for input 'args[0] -a p k textfile o', (6 input parameters).
+        // : args[1] should be an option (starts with '-'), '-a' is the only allowed option.
+        // : args[2] should be a non-negative real number.
+        if (args.size() == 6) {
+            if (args[1][0] != '-') { // args is a char* not a string, cannot use .at(index)
+                std::string errorMsg6 = errorMsg + " - specifically : " + args[1] + " is an not an option.";
+                throw std::invalid_argument(errorMsg6);
+            }
+            if (args[1] != '-a') {
+                std::string errorMsg7 = errorMsg + " - specifically : " + args[1] + " is an unknown option.";
+                throw std::invalid_argument(errorMsg7);
+            }
+            size_t p_idx = 0;
+            double p = std::stod(args[2], &p_idx);
+            if (p_idx < std::string(args[2]).length() || p < 0) {
+                std::string errorMsg8 = errorMsg + " - specifically : " + args[2] + " is an not a valid non-negative real number.";
+                throw std::invalid_argument(errorMsg8);
+            }
+        }
+
+        // check : file should exist in directory.
+        std::ifstream file(args[args.size() - 2]);
+        if (!file.is_open()) {
+            std::string errorMsg9 = errorMsg + " - specifically : textfile " + args[args.size() - 2] + " does not exist in directory.";
+            throw std::runtime_error(errorMsg9);
+        }
+
+        // running classes ModelCreate & ModelTextGenerator
+        // ModelCreate throws std::runtime_error(errorMsg10) when amount of characters in the of the textfile is 
+
+
+    } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
-    }
+        }
+    return 0;
 }
+
