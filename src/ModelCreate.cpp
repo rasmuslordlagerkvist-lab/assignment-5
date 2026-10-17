@@ -30,7 +30,7 @@ std::string file_to_string(std::istream& file, int k, std::string errorMsg) {
     }
 
     // last required error handling.
-    if (text.length() < k) {
+    if (text.length() <= k) {
         std::string errorMsg10 = errorMsg + " - specifically : length of textfile " + std::to_string(text.length()) + ", is smaller than k (" + std::to_string(k) + ").";
         throw std::runtime_error(errorMsg10);
     }
