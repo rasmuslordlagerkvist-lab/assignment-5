@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
         }
 
         // running classes ModelCreate & ModelTextGenerator
-        // ModelCreate throws std::runtime_error(errorMsg10) when amount of characters in the of the textfile is 
+        // ModelCreate throws std::runtime_error(errorMsg10) when amount of characters in the of the textfile (f) is smaller or equal to k (f <= k)
 
 
     } catch (const std::exception& e) {
