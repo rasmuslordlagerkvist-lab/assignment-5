@@ -8,6 +8,12 @@
 
 // maybe splitting up ^^ into smaller helper functions. Not sure on this until I actually code it.
 
+#ifndef MODELTEXTGENERATOR_H
+#define MODELTEXTGENERATOR_H
+
+#include "ModelCreate.h" // this text generator class uses the model creator class.
+
+#include <string>
 
 class ModelTextGenerator {
     
@@ -22,3 +28,5 @@ class ModelTextGenerator {
         // Generates new text
         std::string text_generator(int k, int o, int p);
 };
+
+#endif
