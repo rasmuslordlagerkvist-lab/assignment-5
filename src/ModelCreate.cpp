@@ -11,8 +11,7 @@
 #include <map> // in methods : kgram_initial_maps & kgram_estimates_map.
 
 
-
-
+// the three logic methods :
 
 // read the file into a std::string, also updates chars with characters obeserved in filename. If the string length < int o, then it throws an exception! 
 std::string file_to_string(std::istream& file, int k, std::string errorMsg) {
@@ -37,10 +36,6 @@ std::string file_to_string(std::istream& file, int k, std::string errorMsg) {
 
     return text;
 }
-    
-
-
-
 
 // calls method file_to_string, then updates std::map<string, std::map<char, double>> map_ & std::map<string, double> map_freq.
 void kgram_initial_maps(std::istream& file, int k, std::string errorMsg) {
@@ -73,10 +68,6 @@ void kgram_initial_maps(std::istream& file, int k, std::string errorMsg) {
     }
 }
 
-
-
-
-
 // updates map_ by process : calculates P(c|w) for all c in chars_, for all w in map_. also updates map_standard_estimates : keys = characters from char_ & values = 1/(chars_.length()).
 void kgram_estimates_map(double p) {
 
@@ -95,13 +86,14 @@ void kgram_estimates_map(double p) {
         }
 
         // a temporary map for updating one kgram's (w) estimates P(c|w).
-            std::map<char, double> kgram_c_estimates;
+        std::map<char, double> kgram_c_estimates;
 
         // iterate over characters in chars_.
         for (char c : chars_) {
 
             // igen för mig - map_name.find(c) returnerar pekare till var i map_name som c hittades, eller om c ej hittades returnerar .find(c) istället kgram_map.end() [en markör i slutet av mappen].
-            // ? om_sant så händer det som står här : om_falskt så händer det som står här
+            // ? om_sant så händer det som står här : om_falskt så händer det som står här.
+            // it->second returns value (it->first would return key).
             auto it = kgram_map.find(c);
             double abs_freq = (it != kgram_map.end()) ? it->second : 0.0;
 
@@ -116,3 +108,20 @@ void kgram_estimates_map(double p) {
 
 
 
+// four getter methods, one each for the four private variables.
+
+const std::vector<char>& ModelCreate::get_chars() const {
+    return chars_;
+}
+
+const std::map<std::string, std::map<char, double>>& ModelCreate::get_map() const {
+    return map_;
+}
+
+const std::map<std::string, double>& ModelCreate::get_map_freq() const {
+    return map_freq;
+}
+
+const std::map<char, double>& ModelCreate::get_map_standard_estimates() const {
+    return map_standard_estimates;
+}
