@@ -26,7 +26,7 @@ class ModelTextGenerator {
         ModelTextGenerator(const ModelCreate& input_model);
 
         // Generates new text
-        std::string text_generator(int k, int o, int p);
+        std::string text_generator(int k, int o, double p);
 };
 
 // choose_random_weighted : helper function to text_generator, not needed in ModelTextGenerator.h
