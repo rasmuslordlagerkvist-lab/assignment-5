@@ -20,7 +20,8 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <iostream> // std::istream in methods : file_to_string & (kgram_initial_maps).
+
+#include <iostream>
 
 class ModelCreate {
 
@@ -33,10 +34,10 @@ class ModelCreate {
     public:
 
         // read the file into a std::string, also updates chars with characters obeserved in filename. If the string length < int o, then it throws an exception! 
-        std::string file_to_string(std::istream& file, int k, std::string errorMsg);
+        std::string file_to_string(std::string filename, int k, std::string errorMsg);
 
         // calls method file_to_string, then updates map_ & map_freq.
-        void kgram_initial_maps(std::istream& file, int k, std::string errorMsg);
+        void kgram_initial_maps(std::string filename, int k, std::string errorMsg);
 
         // updates map_ by process : calculates P(c|w) for all c in chars_, for all w in map_. also updates map_standard_estimates : keys = characters from char_ & values = 1/(chars_.length()).
         void kgram_estimates_map(double p = 0);
