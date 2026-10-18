@@ -4,17 +4,25 @@
 
 #include <string> // in all methods.
 #include <algorithm> // std::find in method : file_to_string.
+#include <fstream>
 #include <vector> // .push_back() in method : file_to_string.
 
 #include <stdexcept> // std::runtime_error in method : file_to_string.
 
 #include <map> // in methods : kgram_initial_maps & kgram_estimates_map.
 
-
 // the three logic methods :
 
 // read the file into a std::string, also updates chars with characters obeserved in filename. If the string length < int o, then it throws an exception! 
-std::string ModelCreate::file_to_string(std::istream& file, int k, std::string errorMsg) {
+std::string ModelCreate::file_to_string(std::string filename, int k, std::string errorMsg) {
+
+    // check : file should exist in directory.
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::string errorMsg9 = errorMsg + " - specifically : textfile " + filename + " does not exist in directory.";
+        throw std::runtime_error(errorMsg9);
+    }
+    
     char c;
     std::string text = "";
     
@@ -38,10 +46,10 @@ std::string ModelCreate::file_to_string(std::istream& file, int k, std::string e
 }
 
 // calls method file_to_string, then updates std::map<string, std::map<char, double>> map_ & std::map<string, double> map_freq.
-void ModelCreate::kgram_initial_maps(std::istream& file, int k, std::string errorMsg) {
+void ModelCreate::kgram_initial_maps(std::string filename, int k, std::string errorMsg) {
     
     // call to read file into a std::string.
-    std::string text = file_to_string(file, k, errorMsg);
+    std::string text = file_to_string(filename, k, errorMsg);
 
     // loop through indexes in the the text to find all (but the last) kgram.
     for (size_t i = 0; i + k < text.length(); ++i) {
@@ -56,14 +64,14 @@ void ModelCreate::kgram_initial_maps(std::istream& file, int k, std::string erro
         map_[kgram][next_char]++;
     }
 
-    // update map_freq_ with the last kgram.
+    // update map_freq with the last kgram.
     std::string kgram = text.substr(text.length() - k);
-    map_freq_[kgram]++;
+    map_freq[kgram]++;
 
     // having updated map_freq to be the absolute frequency (amount of observations in text), now :
-    // update map_freq_ to be the relative frequency (number of times kgram=w (specific) in text) / (amount of kgrams in the text)
+    // update map_freq to be the relative frequency (number of times kgram=w (specific) in text) / (amount of kgrams in the text)
     double total_kgrams = text.length() - k + 1;
-    for (auto& [kgram, count] : map_freq_) {
+    for (auto& [kgram, count] : map_freq) {
         count /= total_kgrams;
     }
 }
@@ -73,7 +81,7 @@ void ModelCreate::kgram_estimates_map(double p) {
 
     // update map_standard_estimates.
     for (char c : chars_) {
-        map_standard_estimates[c] = 1.0 / chars_.length();
+        map_standard_estimates[c] = 1.0 / chars_.size();
     }
 
     // iterate over kgrams in map_.
@@ -98,7 +106,7 @@ void ModelCreate::kgram_estimates_map(double p) {
             double abs_freq = (it != kgram_map.end()) ? it->second : 0.0;
 
             // updating c's value to P(c|w).
-            kgram_c_estimates[c] = ( abs_freq + p ) / ( kgram_sum + p * chars_.length() );
+            kgram_c_estimates[c] = ( abs_freq + p ) / ( kgram_sum + p * chars_.size() );
         }
 
         // update map_.
