@@ -14,7 +14,7 @@
 // the three logic methods :
 
 // read the file into a std::string, also updates chars with characters obeserved in filename. If the string length < int o, then it throws an exception! 
-std::string file_to_string(std::istream& file, int k, std::string errorMsg) {
+std::string ModelCreate::file_to_string(std::istream& file, int k, std::string errorMsg) {
     char c;
     std::string text = "";
     
@@ -38,7 +38,7 @@ std::string file_to_string(std::istream& file, int k, std::string errorMsg) {
 }
 
 // calls method file_to_string, then updates std::map<string, std::map<char, double>> map_ & std::map<string, double> map_freq.
-void kgram_initial_maps(std::istream& file, int k, std::string errorMsg) {
+void ModelCreate::kgram_initial_maps(std::istream& file, int k, std::string errorMsg) {
     
     // call to read file into a std::string.
     std::string text = file_to_string(file, k, errorMsg);
@@ -69,7 +69,7 @@ void kgram_initial_maps(std::istream& file, int k, std::string errorMsg) {
 }
 
 // updates map_ by process : calculates P(c|w) for all c in chars_, for all w in map_. also updates map_standard_estimates : keys = characters from char_ & values = 1/(chars_.length()).
-void kgram_estimates_map(double p) {
+void ModelCreate::kgram_estimates_map(double p) {
 
     // update map_standard_estimates.
     for (char c : chars_) {
