@@ -75,6 +75,9 @@ int main(int argc, char* argv[]) {
         ModelTextGenerator model_text_generator(model);
         std::string output_text = model_text_generator.text_generator(k, o, p);
 
+        // since the code seemd shorter than the designated output length o, cout the output_text's length.
+        std::cout << "Genererated text (längd: " << output_text.length() << "/" << o << "):\n";
+
         // main.cpp prints the text in the terminal. std::cout
         std::cout << output_text << std::endl;
 
@@ -85,5 +88,3 @@ int main(int argc, char* argv[]) {
     
     return 0;
 }
-
-
