@@ -45,28 +45,22 @@ int main(int argc, char* argv[]) {
         // check, for input 'args[0] -a p k textfile o', (6 input parameters).
         // : args[1] should be an option (starts with '-'), '-a' is the only allowed option.
         // : args[2] should be a non-negative real number.
+        double p = 0.0;
         if (args.size() == 6) {
             if (args[1][0] != '-') { // args is a char* not a string, cannot use .at(index)
                 std::string errorMsg6 = errorMsg + " - specifically : " + args[1] + " is an not an option.";
                 throw std::invalid_argument(errorMsg6);
             }
-            if (args[1] != '-a') {
+            if (args[1] != "-a") {
                 std::string errorMsg7 = errorMsg + " - specifically : " + args[1] + " is an unknown option.";
                 throw std::invalid_argument(errorMsg7);
             }
             size_t p_idx = 0;
-            double p = std::stod(args[2], &p_idx);
+            p = std::stod(args[2], &p_idx);
             if (p_idx < std::string(args[2]).length() || p < 0) {
                 std::string errorMsg8 = errorMsg + " - specifically : " + args[2] + " is an not a valid non-negative real number.";
                 throw std::invalid_argument(errorMsg8);
             }
-        }
-
-        // check : file should exist in directory.
-        std::ifstream file(args[args.size() - 2]);
-        if (!file.is_open()) {
-            std::string errorMsg9 = errorMsg + " - specifically : textfile " + args[args.size() - 2] + " does not exist in directory.";
-            throw std::runtime_error(errorMsg9);
         }
 
         // checkers in main.cpp done
@@ -74,8 +68,8 @@ int main(int argc, char* argv[]) {
         // now using classes ModelCreate & ModelTextGenerator to create model and generate new text.
 
         // creating model.
-        ModelCreate model;
-        model.kgram_initial_maps(file, k, errorMsg); // may throw runtime_error : when text length f <= k. updates map_ and map_freq_ and chars_.
+        ModelCreate model;    // args[args.size() - 2] is the filename.
+        model.kgram_initial_maps(args[args.size() - 2], k, errorMsg); // may throw runtime_error : when text length f <= k. updates map_ and map_freq_ and chars_.
         model.kgram_estimates_map(p); // updates map_ and map_standard_estimates
 
         ModelTextGenerator model_text_generator(model);
@@ -91,3 +85,5 @@ int main(int argc, char* argv[]) {
     
     return 0;
 }
+
+
