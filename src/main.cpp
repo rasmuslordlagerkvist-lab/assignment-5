@@ -1,4 +1,3 @@
-
 #include "ModelCreate.h"
 #include "ModelTextGenerator.h"
 
@@ -70,14 +69,25 @@ int main(int argc, char* argv[]) {
             throw std::runtime_error(errorMsg9);
         }
 
-        // running classes ModelCreate & ModelTextGenerator
-        // ModelCreate throws std::runtime_error(errorMsg10) when amount of characters in the of the textfile (f) is smaller or equal to k (f <= k)
+        // checkers in main.cpp done
+        // 
+        // now using classes ModelCreate & ModelTextGenerator to create model and generate new text.
 
+        // creating model.
+        ModelCreate model;
+        model.kgram_initial_maps(file, k, errorMsg); // may throw runtime_error : when text length f <= k. updates map_ and map_freq_ and chars_.
+        model.kgram_estimates_map(p); // updates map_ and map_standard_estimates
+
+        ModelTextGenerator model_text_generator(model);
+        std::string output_text = model_text_generator.text_generator(k, o, p);
+
+        // main.cpp prints the text in the terminal. std::cout
+        std::cout << output_text << std::endl;
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
-        }
+    }
+    
     return 0;
 }
-
