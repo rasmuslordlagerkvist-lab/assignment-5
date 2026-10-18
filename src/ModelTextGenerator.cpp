@@ -30,7 +30,7 @@ T choose_random_weighted(const std::map<T, double>& weight_map, std::mt19937& ge
     return items[distribution(gen)];
 }
 
-std::string ModelTextGenerator::text_generator(int k, int o, int p) {
+std::string ModelTextGenerator::text_generator(int k, int o, double p) {
 
     std::random_device rd;
     std::mt19937 gen(rd());
